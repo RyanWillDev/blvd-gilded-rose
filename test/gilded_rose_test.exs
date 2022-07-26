@@ -101,4 +101,44 @@ defmodule GildedRoseTest do
       end
     end
   end
+
+  # Note: Backstage passes are currently denoted by name.
+  # The name "Backstage passes to a TAFKAL80ETC concert" specifically.
+  describe "backstage passes" do
+    test "quality is set to 0 after sell_in has passed ie: is sell_in <= 0" do
+      item = Item.new("Backstage passes to a TAFKAL80ETC concert", 0, 10)
+      gilded_rose = GildedRose.new([item])
+
+      GildedRose.update_quality(gilded_rose)
+      [updated_item] = GildedRose.items(gilded_rose)
+      assert updated_item.quality == 0
+    end
+
+    test "quality increases by 1 on each update when there are more than 10 days until expiration" do
+      item = Item.new("Backstage passes to a TAFKAL80ETC concert", 100, 10)
+      gilded_rose = GildedRose.new([item])
+
+      GildedRose.update_quality(gilded_rose)
+      [updated_item] = GildedRose.items(gilded_rose)
+      assert updated_item.quality == 11
+    end
+
+    test "quality increases by 2 when there are 10 or less days until expiration" do
+      item = Item.new("Backstage passes to a TAFKAL80ETC concert", 10, 10)
+      gilded_rose = GildedRose.new([item])
+
+      GildedRose.update_quality(gilded_rose)
+      [updated_item] = GildedRose.items(gilded_rose)
+      assert updated_item.quality == 12
+    end
+
+    test "quality increases by 3 when there are 5 or less days until expiration" do
+      item = Item.new("Backstage passes to a TAFKAL80ETC concert", 5, 10)
+      gilded_rose = GildedRose.new([item])
+
+      GildedRose.update_quality(gilded_rose)
+      [updated_item] = GildedRose.items(gilded_rose)
+      assert updated_item.quality == 13
+    end
+  end
 end
