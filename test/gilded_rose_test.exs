@@ -55,4 +55,26 @@ defmodule GildedRoseTest do
       assert updated_item.quality == 0
     end
   end
+
+  # Note: Aged items are currently denoted by name.
+  # The name "Aged Brie" specifically.
+  describe "aged items" do
+    test "quality is incremented by 1 on update" do
+      item = Item.new("Aged Brie", 10, 10)
+      gilded_rose = GildedRose.new([item])
+
+      GildedRose.update_quality(gilded_rose)
+      [updated_item] = GildedRose.items(gilded_rose)
+      assert updated_item.quality == 11
+    end
+
+    test "quality can never exceed 50" do
+      item = Item.new("Aged Brie", 1, 50)
+      gilded_rose = GildedRose.new([item])
+
+      GildedRose.update_quality(gilded_rose)
+      [updated_item] = GildedRose.items(gilded_rose)
+      assert updated_item.quality == 50
+    end
+  end
 end
