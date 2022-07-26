@@ -17,4 +17,42 @@ defmodule GildedRoseTest do
       assert :ok == GildedRose.update_quality(gilded_rose)
     end
   end
+
+  describe "generic items" do
+    test "sell_in is decremented by 1 on update" do
+      item = Item.new("generic item", 10, 10)
+      gilded_rose = GildedRose.new([item])
+
+      GildedRose.update_quality(gilded_rose)
+      [updated_item] = GildedRose.items(gilded_rose)
+      assert updated_item.sell_in == 9
+    end
+
+    test "quality is decremented by 1 on update" do
+      item = Item.new("generic item", 10, 10)
+      gilded_rose = GildedRose.new([item])
+
+      GildedRose.update_quality(gilded_rose)
+      [updated_item] = GildedRose.items(gilded_rose)
+      assert updated_item.quality == 9
+    end
+
+    test "quality degrades twice as fast for expired items" do
+      item = Item.new("generic item", 0, 10)
+      gilded_rose = GildedRose.new([item])
+
+      GildedRose.update_quality(gilded_rose)
+      [updated_item] = GildedRose.items(gilded_rose)
+      assert updated_item.quality == 8
+    end
+
+    test "quality can never be negative" do
+      item = Item.new("generic item", 0, 0)
+      gilded_rose = GildedRose.new([item])
+
+      GildedRose.update_quality(gilded_rose)
+      [updated_item] = GildedRose.items(gilded_rose)
+      assert updated_item.quality == 0
+    end
+  end
 end
