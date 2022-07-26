@@ -77,4 +77,28 @@ defmodule GildedRoseTest do
       assert updated_item.quality == 50
     end
   end
+
+  # Note: Legendary items are currently denoted by name.
+  # The name "Sulfuras, Hand of Ragnaros" specifically.
+  describe "legendary items" do
+    test "sell_in remains unchanged on update" do
+      item = Item.new("Sulfuras, Hand of Ragnaros", 10, 80)
+      gilded_rose = GildedRose.new([item])
+
+      GildedRose.update_quality(gilded_rose)
+      [updated_item] = GildedRose.items(gilded_rose)
+      assert updated_item.sell_in == item.sell_in
+    end
+
+    test "quality never decreases" do
+      item = Item.new("Sulfuras, Hand of Ragnaros", 10, 80)
+      gilded_rose = GildedRose.new([item])
+
+      for _ <- 0..10 do
+        GildedRose.update_quality(gilded_rose)
+        [updated_item] = GildedRose.items(gilded_rose)
+        assert updated_item.quality == item.quality
+      end
+    end
+  end
 end
