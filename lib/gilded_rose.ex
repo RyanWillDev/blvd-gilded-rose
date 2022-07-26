@@ -2,17 +2,10 @@ defmodule GildedRose do
   use Agent
   alias GildedRose.Item
 
-  def new() do
+  def new(inventory \\ default_inventory()) do
     {:ok, agent} =
       Agent.start_link(fn ->
-        [
-          Item.new("+5 Dexterity Vest", 10, 20),
-          Item.new("Aged Brie", 2, 0),
-          Item.new("Elixir of the Mongoose", 5, 7),
-          Item.new("Sulfuras, Hand of Ragnaros", 0, 80),
-          Item.new("Backstage passes to a TAFKAL80ETC concert", 15, 20),
-          Item.new("Conjured Mana Cake", 3, 6)
-        ]
+        inventory
       end)
 
     agent
@@ -134,5 +127,16 @@ defmodule GildedRose do
     end
 
     :ok
+  end
+
+  defp default_inventory do
+    [
+      Item.new("+5 Dexterity Vest", 10, 20),
+      Item.new("Aged Brie", 2, 0),
+      Item.new("Elixir of the Mongoose", 5, 7),
+      Item.new("Sulfuras, Hand of Ragnaros", 0, 80),
+      Item.new("Backstage passes to a TAFKAL80ETC concert", 15, 20),
+      Item.new("Conjured Mana Cake", 3, 6)
+    ]
   end
 end
