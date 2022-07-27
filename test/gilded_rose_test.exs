@@ -3,7 +3,7 @@ defmodule GildedRoseTest do
   doctest GildedRose
 
   alias GildedRose.Item
-  alias GildedRose.Inventory.Item.{Aged, Generic, Legendary}
+  alias GildedRose.Inventory.Item.{Aged, BackstagePass, Generic, Legendary}
 
   describe "interface specification" do
     test "accepts a list as starting inventory" do
@@ -90,11 +90,9 @@ defmodule GildedRoseTest do
     end
   end
 
-  # Note: Backstage passes are currently denoted by name.
-  # The name "Backstage passes to a TAFKAL80ETC concert" specifically.
   describe "backstage passes" do
     test "quality is set to 0 after sell_in has passed ie: is sell_in <= 0" do
-      item = Item.new("Backstage passes to a TAFKAL80ETC concert", 0, 10)
+      item = BackstagePass.new("Backstage passes to a TAFKAL80ETC concert", 0, 10)
       gilded_rose = GildedRose.new([item])
 
       GildedRose.update_quality(gilded_rose)
@@ -103,7 +101,7 @@ defmodule GildedRoseTest do
     end
 
     test "quality increases by 1 on each update when there are more than 10 days until expiration" do
-      item = Item.new("Backstage passes to a TAFKAL80ETC concert", 100, 10)
+      item = BackstagePass.new("Backstage passes to a TAFKAL80ETC concert", 100, 10)
       gilded_rose = GildedRose.new([item])
 
       GildedRose.update_quality(gilded_rose)
@@ -112,7 +110,7 @@ defmodule GildedRoseTest do
     end
 
     test "quality increases by 2 when there are 10 or less days until expiration" do
-      item = Item.new("Backstage passes to a TAFKAL80ETC concert", 10, 10)
+      item = BackstagePass.new("Backstage passes to a TAFKAL80ETC concert", 10, 10)
       gilded_rose = GildedRose.new([item])
 
       GildedRose.update_quality(gilded_rose)
@@ -121,7 +119,7 @@ defmodule GildedRoseTest do
     end
 
     test "quality increases by 3 when there are 5 or less days until expiration" do
-      item = Item.new("Backstage passes to a TAFKAL80ETC concert", 5, 10)
+      item = BackstagePass.new("Backstage passes to a TAFKAL80ETC concert", 5, 10)
       gilded_rose = GildedRose.new([item])
 
       GildedRose.update_quality(gilded_rose)
