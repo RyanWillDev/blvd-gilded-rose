@@ -3,7 +3,7 @@ defmodule GildedRoseTest do
   doctest GildedRose
 
   alias GildedRose.Item
-  alias GildedRose.Inventory.Item.{Aged, BackstagePass, Generic, Legendary}
+  alias GildedRose.Inventory.Item.{Aged, BackstagePass, Conjured, Generic, Legendary}
 
   describe "interface specification" do
     test "accepts a list as starting inventory" do
@@ -125,6 +125,44 @@ defmodule GildedRoseTest do
       GildedRose.update_quality(gilded_rose)
       [updated_item] = GildedRose.items(gilded_rose)
       assert updated_item.quality == 13
+    end
+  end
+
+  describe "conjured items" do
+    test "sell_in is decremented by 1 on update" do
+      item = Conjured.new("generic item", 10, 10)
+      gilded_rose = GildedRose.new([item])
+
+      GildedRose.update_quality(gilded_rose)
+      [updated_item] = GildedRose.items(gilded_rose)
+      assert updated_item.sell_in == 9
+    end
+
+    test "quality is decremented by 2 on update" do
+      item = Conjured.new("generic item", 10, 10)
+      gilded_rose = GildedRose.new([item])
+
+      GildedRose.update_quality(gilded_rose)
+      [updated_item] = GildedRose.items(gilded_rose)
+      assert updated_item.quality == 8
+    end
+
+    test "quality degrades twice as fast for expired items" do
+      item = Conjured.new("generic item", 0, 10)
+      gilded_rose = GildedRose.new([item])
+
+      GildedRose.update_quality(gilded_rose)
+      [updated_item] = GildedRose.items(gilded_rose)
+      assert updated_item.quality == 6
+    end
+
+    test "quality can never be negative" do
+      item = Conjured.new("generic item", 0, 0)
+      gilded_rose = GildedRose.new([item])
+
+      GildedRose.update_quality(gilded_rose)
+      [updated_item] = GildedRose.items(gilded_rose)
+      assert updated_item.quality == 0
     end
   end
 end
