@@ -13,7 +13,7 @@ defmodule GildedRoseTest do
 
     test "returns :ok on successful update" do
       gilded_rose = GildedRose.new()
-      [%Item{} | _] = GildedRose.items(gilded_rose)
+      [%{} | _] = GildedRose.items(gilded_rose)
       assert :ok == GildedRose.update_quality(gilded_rose)
     end
   end
