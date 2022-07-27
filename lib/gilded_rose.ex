@@ -1,6 +1,7 @@
 defmodule GildedRose do
   use Agent
-  alias GildedRose.Item
+  alias GildedRose.Item, as: LegacyItem
+  alias GildedRose.Inventory.Item
 
   def new(inventory \\ default_inventory()) do
     {:ok, agent} =
@@ -17,7 +18,13 @@ defmodule GildedRose do
     Agent.get_and_update(agent, fn inventory ->
       updated_inventory =
         Enum.map(inventory, fn item ->
-          legacy_update(item)
+          case item do
+            %LegacyItem{} ->
+              legacy_update(item)
+
+            _ ->
+              Item.update(item)
+          end
         end)
 
       {:ok, updated_inventory}
@@ -136,12 +143,12 @@ defmodule GildedRose do
 
   defp default_inventory do
     [
-      Item.new("+5 Dexterity Vest", 10, 20),
-      Item.new("Aged Brie", 2, 0),
-      Item.new("Elixir of the Mongoose", 5, 7),
-      Item.new("Sulfuras, Hand of Ragnaros", 0, 80),
-      Item.new("Backstage passes to a TAFKAL80ETC concert", 15, 20),
-      Item.new("Conjured Mana Cake", 3, 6)
+      LegacyItem.new("+5 Dexterity Vest", 10, 20),
+      LegacyItem.new("Aged Brie", 2, 0),
+      LegacyItem.new("Elixir of the Mongoose", 5, 7),
+      LegacyItem.new("Sulfuras, Hand of Ragnaros", 0, 80),
+      LegacyItem.new("Backstage passes to a TAFKAL80ETC concert", 15, 20),
+      LegacyItem.new("Conjured Mana Cake", 3, 6)
     ]
   end
 end
