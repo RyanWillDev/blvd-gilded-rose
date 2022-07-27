@@ -1,4 +1,10 @@
 defmodule GildedRose.Inventory.Item.Conjured do
+  @moduledoc """
+  Represents the Conjured class of items.
+
+  Conjured items degrade in quality more rapidly than other items.
+  However, their quality can never be negative.
+  """
   defstruct [:name, :sell_in, :quality]
 
   def new(name, sell_in, quality) do

@@ -1,4 +1,9 @@
 defmodule GildedRose.Inventory.Item.Aged do
+  @moduledoc """
+  Represents the class of Aged items.
+
+  Aged items increase in quality as their sell_in value decreases. However, their value is capped at 50.
+  """
   defstruct [:name, :sell_in, :quality]
 
   def new(name, sell_in, quality) when quality > 50, do: new(name, sell_in, 50)

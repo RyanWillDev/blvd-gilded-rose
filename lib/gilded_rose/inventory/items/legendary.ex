@@ -1,4 +1,9 @@
 defmodule GildedRose.Inventory.Item.Legendary do
+  @moduledoc """
+  Represents the Legendary class of items.
+
+  Legendary items never have to be sold and never decrease in quality.
+  """
   defstruct [:name, :quality]
 
   def new(name) do

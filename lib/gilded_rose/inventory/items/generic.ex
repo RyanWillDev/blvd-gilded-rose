@@ -1,4 +1,10 @@
 defmodule GildedRose.Inventory.Item.Generic do
+  @moduledoc """
+  Represents the Generic class of items.
+
+  Generic items decrease in quality as they reach, and pass, their expiration.
+  However, their quality can never be negative.
+  """
   defstruct [:name, :sell_in, :quality]
 
   def new(name, sell_in, quality) do

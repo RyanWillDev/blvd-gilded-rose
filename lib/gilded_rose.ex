@@ -20,6 +20,11 @@ defmodule GildedRose do
       updated_inventory =
         Enum.map(inventory, fn item ->
           case item do
+            # LegacyItem and legacy_update/1 are left in place until such a time
+            # we can be sure that they can be removed.
+            #
+            # As it stands now, there are no references to this code other than
+            # this one.
             %LegacyItem{} ->
               legacy_update(item)
 

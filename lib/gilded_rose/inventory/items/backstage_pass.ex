@@ -1,4 +1,12 @@
 defmodule GildedRose.Inventory.Item.BackstagePass do
+  @moduledoc """
+  Representation of the BacktagePass class of items
+
+  Backstage Passes increase in quality until they have expired at which point they are they
+  they are valueless (ie: have 0 quality).
+
+  The rate of the increase in quality increases as the item approaches expiration.
+  """
   defstruct [:name, :sell_in, :quality]
 
   def new(name, sell_in, quality) when quality > 50, do: new(name, sell_in, 50)
