@@ -3,6 +3,7 @@ defmodule GildedRoseTest do
   doctest GildedRose
 
   alias GildedRose.Item
+  alias GildedRose.Inventory.Item.Generic
 
   describe "interface specification" do
     test "accepts a list as starting inventory" do
@@ -20,7 +21,7 @@ defmodule GildedRoseTest do
 
   describe "generic items" do
     test "sell_in is decremented by 1 on update" do
-      item = Item.new("generic item", 10, 10)
+      item = Generic.new("generic item", 10, 10)
       gilded_rose = GildedRose.new([item])
 
       GildedRose.update_quality(gilded_rose)
@@ -29,7 +30,7 @@ defmodule GildedRoseTest do
     end
 
     test "quality is decremented by 1 on update" do
-      item = Item.new("generic item", 10, 10)
+      item = Generic.new("generic item", 10, 10)
       gilded_rose = GildedRose.new([item])
 
       GildedRose.update_quality(gilded_rose)
@@ -38,7 +39,7 @@ defmodule GildedRoseTest do
     end
 
     test "quality degrades twice as fast for expired items" do
-      item = Item.new("generic item", 0, 10)
+      item = Generic.new("generic item", 0, 10)
       gilded_rose = GildedRose.new([item])
 
       GildedRose.update_quality(gilded_rose)
@@ -47,7 +48,7 @@ defmodule GildedRoseTest do
     end
 
     test "quality can never be negative" do
-      item = Item.new("generic item", 0, 0)
+      item = Generic.new("generic item", 0, 0)
       gilded_rose = GildedRose.new([item])
 
       GildedRose.update_quality(gilded_rose)
