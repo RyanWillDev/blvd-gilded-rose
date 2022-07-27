@@ -88,3 +88,55 @@ And you can package up a bundle of your completed work with:
 ```
 git bundle create your_name.bundle master
 ```
+
+## Solution Reflections
+
+### The Problem
+
+Aside from the absurdly nested conditionals, the real issue with the legacy
+update functionality was its reliance on inspecting the names of the items to
+determine the type of updates that should be applied. This is not ideal for many
+reasons least of which is the one to one correspondence of new item types to special cases.
+For any new item that did not meet the criteria of what I called a "generic" item,
+you would have to hardcode the name into the update function in order to treat it differently.
+
+Even though, the code in the example was purposefully obscure, it is not hard to imagine how
+something approximating this code could result from this design in a real-world scenario.
+
+## My Solution
+
+In order to avoid inspecting the names of the items to determine how to update
+them, I introduced a simple interface via a [protocol](lib/gilded_rose/inventory/item.ex).
+Protocols provide polymorphism via type-based dispatch on the first argument.
+This means I could define a different "type", via a struct, for each "class" of
+item in the system.
+
+With that in place, I could begin implementing the protocol for each existing
+"class" of item which moves the special case handling of their quality updates
+to a single location. Further, adding a different "class" of item is a simple process of
+implementing the protocol for the new type of item. This is exactly the process
+that was taken to implement the Conjured class of items.
+
+This approach does include some duplicated or nearly identical code, the struct
+definitions for most items for instance, but I think it is justified by the
+overall flexibility the approach provides by allowing the interface to be
+defined and implemented separately from it's data representation.
+See this [paper](https://dl.acm.org/doi/pdf/10.1145/942572.807045) and this
+[talk](https://www.youtube.com/watch?v=fhheJ5zsXBQ) for a better explanation.
+
+For example, when implementing the [Legendary items](lib/gilded_rose/inventory/items/legendary.ex)
+I chose to not add a `sell_in` value to the struct and to hardcode the
+`quality` to `80` since that was the simplest way to meet the requirements of the spec.
+Since Legendary items effectively represent the null or empty case, the
+protocol implementation was as simple as just returning the item as is.
+
+Another aspect I'd like to call attention to is the concurrency issues that were
+resolved by replacing the various calls to `Agent`'s `get` and `update` with
+a single call `get_and_update` which is an atomic operation. This prevents
+concurrent operations from causing unspecified behavior by queuing the in the process's mailbox.
+
+For example, if the API was extended to include a delete operation and it was
+called concurrently with `update_quality`, the index's used in the old code's
+call to `Agent.update` and `Agent.get` could not exist or represent items other
+than those associated with the index when the first call to `Agent.get`
+occurred.
