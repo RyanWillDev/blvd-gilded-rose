@@ -2,7 +2,7 @@ defmodule GildedRose do
   use Agent
   alias GildedRose.Item, as: LegacyItem
   alias GildedRose.Inventory.Item
-  alias GildedRose.Inventory.Item.{Aged, Generic}
+  alias GildedRose.Inventory.Item.{Aged, Generic, Legendary}
 
   def new(inventory \\ default_inventory()) do
     {:ok, agent} =
@@ -147,7 +147,7 @@ defmodule GildedRose do
       Generic.new("+5 Dexterity Vest", 10, 20),
       Aged.new("Aged Brie", 2, 0),
       Generic.new("Elixir of the Mongoose", 5, 7),
-      LegacyItem.new("Sulfuras, Hand of Ragnaros", 0, 80),
+      Legendary.new("Sulfuras, Hand of Ragnaros"),
       LegacyItem.new("Backstage passes to a TAFKAL80ETC concert", 15, 20),
       LegacyItem.new("Conjured Mana Cake", 3, 6)
     ]
