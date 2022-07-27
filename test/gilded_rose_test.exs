@@ -2,12 +2,11 @@ defmodule GildedRoseTest do
   use ExUnit.Case
   doctest GildedRose
 
-  alias GildedRose.Item
   alias GildedRose.Inventory.Item.{Aged, BackstagePass, Conjured, Generic, Legendary}
 
   describe "interface specification" do
     test "accepts a list as starting inventory" do
-      item = Item.new("item", 10, 10)
+      item = Generic.new("item", 10, 10)
       gilded_rose = GildedRose.new([item])
       assert [^item] = GildedRose.items(gilded_rose)
     end
