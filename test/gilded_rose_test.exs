@@ -3,7 +3,7 @@ defmodule GildedRoseTest do
   doctest GildedRose
 
   alias GildedRose.Item
-  alias GildedRose.Inventory.Item.Generic
+  alias GildedRose.Inventory.Item.{Aged, Generic}
 
   describe "interface specification" do
     test "accepts a list as starting inventory" do
@@ -57,11 +57,9 @@ defmodule GildedRoseTest do
     end
   end
 
-  # Note: Aged items are currently denoted by name.
-  # The name "Aged Brie" specifically.
   describe "aged items" do
     test "quality is incremented by 1 on update" do
-      item = Item.new("Aged Brie", 10, 10)
+      item = Aged.new("Aged Brie", 10, 10)
       gilded_rose = GildedRose.new([item])
 
       GildedRose.update_quality(gilded_rose)
@@ -70,7 +68,7 @@ defmodule GildedRoseTest do
     end
 
     test "quality can never exceed 50" do
-      item = Item.new("Aged Brie", 1, 50)
+      item = Aged.new("Aged Brie", 1, 50)
       gilded_rose = GildedRose.new([item])
 
       GildedRose.update_quality(gilded_rose)
