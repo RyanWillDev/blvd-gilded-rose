@@ -3,7 +3,7 @@ defmodule GildedRoseTest do
   doctest GildedRose
 
   alias GildedRose.Item
-  alias GildedRose.Inventory.Item.{Aged, Generic}
+  alias GildedRose.Inventory.Item.{Aged, Generic, Legendary}
 
   describe "interface specification" do
     test "accepts a list as starting inventory" do
@@ -77,20 +77,9 @@ defmodule GildedRoseTest do
     end
   end
 
-  # Note: Legendary items are currently denoted by name.
-  # The name "Sulfuras, Hand of Ragnaros" specifically.
   describe "legendary items" do
-    test "sell_in remains unchanged on update" do
-      item = Item.new("Sulfuras, Hand of Ragnaros", 10, 80)
-      gilded_rose = GildedRose.new([item])
-
-      GildedRose.update_quality(gilded_rose)
-      [updated_item] = GildedRose.items(gilded_rose)
-      assert updated_item.sell_in == item.sell_in
-    end
-
     test "quality never decreases" do
-      item = Item.new("Sulfuras, Hand of Ragnaros", 10, 80)
+      item = Legendary.new("Sulfuras, Hand of Ragnaros")
       gilded_rose = GildedRose.new([item])
 
       for _ <- 0..10 do
